@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Which City in China is Right for You? — Wei Let's Study in China</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Sarabun:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #C0392B;
+    --gold: #D4A847;
+    --ink: #1a1208;
+    --cream: #FAF6EE;
+    --paper: #F2ECD8;
+    --muted: #8a7a5a;
+    --accent: #8B1A1A;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--cream);
+    font-family: 'Sarabun', sans-serif;
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(192,57,43,0.04) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(212,168,71,0.06) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Language Toggle */
+  .lang-toggle {
+    display: flex;
+    justify-content: flex-end;
+    padding: 16px 0 0;
+  }
+  .lang-btn-wrap {
+    display: flex;
+    background: white;
+    border: 1.5px solid rgba(139,26,26,0.15);
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 1px 8px rgba(26,18,8,0.06);
+  }
+  .lang-btn {
+    padding: 6px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Sarabun', sans-serif;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+  }
+  .lang-btn.active {
+    background: var(--red);
+    color: white;
+    border-radius: 30px;
+  }
+
+  .header {
+    text-align: center;
+    padding: 32px 0 28px;
+    animation: fadeDown 0.8s ease both;
+  }
+  .brand {
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 6vw, 40px);
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .title em { font-style: italic; color: var(--gold); }
+  .subtitle {
+    font-size: 15px;
+    color: var(--muted);
+    font-weight: 300;
+    margin-top: 12px;
+  }
+  .divider {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--red), var(--gold));
+    margin: 20px auto;
+    border-radius: 2px;
+  }
+
+  /* Progress */
+  .progress-wrap {
+    margin-bottom: 32px;
+    animation: fadeUp 0.6s ease both;
+    animation-delay: 0.2s;
+  }
+  .progress-bar {
+    height: 3px;
+    background: rgba(139,26,26,0.12);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--red), var(--gold));
+    border-radius: 4px;
+    transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+  }
+  .progress-text {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: right;
+    letter-spacing: 0.05em;
+  }
+
+  /* Card */
+  .card {
+    background: white;
+    border-radius: 4px;
+    padding: 36px 40px;
+    box-shadow: 0 2px 24px rgba(26,18,8,0.08), 0 0 0 1px rgba(212,168,71,0.15);
+    animation: fadeUp 0.5s ease both;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--red), var(--gold));
+  }
+  .q-number {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+  .q-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(18px, 3.5vw, 22px);
+    color: var(--ink);
+    line-height: 1.5;
+    margin-bottom: 28px;
+    font-weight: 700;
+  }
+
+  /* Options */
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    border: 1.5px solid rgba(139,26,26,0.12);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: transparent;
+    text-align: left;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 15px;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+  .option:hover {
+    border-color: var(--red);
+    background: rgba(192,57,43,0.03);
+    transform: translateX(4px);
+  }
+  .option.selected {
+    border-color: var(--red);
+    background: rgba(192,57,43,0.06);
+  }
+  .option-letter {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 1.5px solid rgba(139,26,26,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+    color: var(--red);
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .option.selected .option-letter {
+    background: var(--red); color: white; border-color: var(--red);
+  }
+
+  /* Start screen */
+  .start-screen { text-align: center; padding: 16px 0; }
+  .intro-text { font-size: 16px; line-height: 1.8; color: #555; margin-bottom: 32px; }
+  .cities-preview {
+    display: flex; justify-content: center;
+    flex-wrap: wrap; gap: 8px; margin-bottom: 36px;
+  }
+  .city-chip {
+    padding: 6px 14px;
+    background: var(--paper);
+    border: 1px solid rgba(212,168,71,0.4);
+    border-radius: 20px;
+    font-size: 13px; color: var(--muted);
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 14px 40px;
+    background: var(--red); color: white;
+    border: none; border-radius: 4px;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 16px; font-weight: 600;
+    cursor: pointer; letter-spacing: 0.05em;
+    transition: all 0.2s;
+    box-shadow: 0 4px 16px rgba(192,57,43,0.3);
+  }
+  .btn:hover {
+    background: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(192,57,43,0.4);
+  }
+  .btn-outline {
+    background: transparent; color: var(--red);
+    border: 1.5px solid var(--red);
+    box-shadow: none; margin-top: 12px;
+    font-size: 14px; padding: 11px 28px;
+  }
+  .btn-outline:hover { background: rgba(192,57,43,0.05); box-shadow: none; }
+
+  /* Result */
+  .result-screen { animation: fadeUp 0.6s ease both; }
+  .result-city-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 8vw, 52px);
+    font-weight: 700; color: var(--red);
+    line-height: 1; margin-bottom: 4px;
+  }
+  .result-city-cn {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 22px; color: var(--gold); margin-bottom: 20px;
+  }
+  .result-emoji { font-size: 52px; margin-bottom: 16px; display: block; }
+  .result-badge {
+    display: inline-block;
+    padding: 4px 14px;
+    background: var(--paper); border: 1px solid var(--gold);
+    border-radius: 20px; font-size: 12px; color: var(--muted);
+    letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 20px;
+  }
+  .result-desc { font-size: 16px; line-height: 1.9; color: #444; margin-bottom: 24px; }
+  .result-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+  .tag {
+    padding: 5px 12px;
+    background: rgba(192,57,43,0.07);
+    border-radius: 20px; font-size: 13px;
+    color: var(--red); font-weight: 600;
+  }
+  .cta-box {
+    background: var(--paper);
+    border: 1px solid rgba(212,168,71,0.3);
+    border-radius: 4px; padding: 20px 24px;
+    margin-top: 24px; text-align: center;
+  }
+  .cta-box p { font-size: 14px; color: var(--muted); margin-bottom: 14px; line-height: 1.6; }
+  .cta-box strong { color: var(--ink); }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hidden { display: none !important; }
+  @media (max-width: 480px) {
+    .card { padding: 24px 20px; }
+    .container { padding: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Language Toggle -->
+  <div class="lang-toggle">
+    <div class="lang-btn-wrap">
+      <button class="lang-btn active" id="btn-th" onclick="setLang('th')">🇹🇭 ไทย</button>
+      <button class="lang-btn" id="btn-en" onclick="setLang('en')">🇬🇧 English</button>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="brand">Wei Let's Study in China</div>
+    <h1 class="title" id="header-title"></h1>
+    <div class="divider"></div>
+    <p class="subtitle" id="header-subtitle"></p>
+  </div>
+
+  <!-- START SCREEN -->
+  <div id="start-screen" class="card start-screen">
+    <p class="intro-text" id="intro-text"></p>
+    <div class="cities-preview">
+      <span class="city-chip">🏙️ <span class="city-label" data-th="ปักกิ่ง" data-en="Beijing"></span></span>
+      <span class="city-chip">✨ <span class="city-label" data-th="เซี่ยงไฮ้" data-en="Shanghai"></span></span>
+      <span class="city-chip">🌿 <span class="city-label" data-th="เฉิงตู" data-en="Chengdu"></span></span>
+      <span class="city-chip">🌊 <span class="city-label" data-th="กว่างโจว" data-en="Guangzhou"></span></span>
+      <span class="city-chip">💻 <span class="city-label" data-th="เซินเจิ้น" data-en="Shenzhen"></span></span>
+      <span class="city-chip">🏔️ <span class="city-label" data-th="คุนหมิง" data-en="Kunming"></span></span>
+    </div>
+    <button class="btn" id="start-btn" onclick="startQuiz()"></button>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div id="quiz-screen" class="hidden">
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+      <div class="progress-text" id="progress-text"></div>
+    </div>
+    <div class="card" id="question-card">
+      <div class="q-number" id="q-number"></div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options-container"></div>
+    </div>
+  </div>
+
+  <!-- RESULT SCREEN -->
+  <div id="result-screen" class="hidden card result-screen">
+    <div style="text-align:center; margin-bottom: 8px;">
+      <div class="brand" id="result-label"></div>
+      <span class="result-emoji" id="result-emoji"></span>
+      <div class="result-city-name" id="result-city"></div>
+      <div class="result-city-cn" id="result-city-cn"></div>
+      <div class="result-badge" id="result-type"></div>
+    </div>
+    <p class="result-desc" id="result-desc"></p>
+    <div class="result-tags" id="result-tags"></div>
+    <div style="font-size:15px; color:#555; line-height:1.8; margin-bottom:20px;" id="result-study"></div>
+    <div class="cta-box">
+      <p id="cta-text"></p>
+      <button class="btn" id="cta-btn" onclick="alert('DM หา Wei ได้เลยนะคะ! 🎉')"></button>
+    </div>
+    <div style="text-align:center; margin-top:16px;">
+      <button class="btn btn-outline" id="retry-btn" onclick="resetQuiz()"></button>
+    </div>
+  </div>
+
+</div>
+<script>
+// ─── TRANSLATIONS ───────────────────────────────────────────────
+const t = {
+  th: {
+    headerTitle: 'เมืองไหนในจีน<br>ที่ <em>ใช่</em> สำหรับคุณ?',
+    headerSubtitle: 'ตอบ 10 ข้อ รู้ผลทันที ✨',
+    introText: 'แต่ละเมืองในจีนมีบุคลิกและสไตล์ชีวิตที่ต่างกัน\nลองดูว่าไลฟ์สไตล์และความฝันของคุณ\nmatch กับเมืองไหนมากที่สุด 🇨🇳',
+    startBtn: 'เริ่มทำแบบทดสอบ →',
+    questionLabel: 'คำถามที่',
+    progressOf: 'จาก',
+    resultLabel: 'ผลลัพธ์ของคุณ',
+    ctaBtn: 'ปรึกษา Wei →',
+    retryBtn: 'ลองทำใหม่อีกครั้ง',
+    ctaText: (city) => `อยากรู้ว่ามหาวิทยาลัยใน${city}ที่เหมาะกับโปรไฟล์คุณคือที่ไหน?\nปรึกษา Wei ได้เลย ฟรี ไม่มีข้อผูกมัด 😊`,
+  },
+  en: {
+    headerTitle: 'Which City in China<br>is <em>Right</em> for You?',
+    headerSubtitle: 'Answer 10 questions, find out instantly ✨',
+    introText: 'Every city in China has its own personality and lifestyle.\nSee which one matches your dreams and vibe the most 🇨🇳',
+    startBtn: 'Start the Quiz →',
+    questionLabel: 'Question',
+    progressOf: 'of',
+    resultLabel: 'Your Result',
+    ctaBtn: 'Chat with Wei →',
+    retryBtn: 'Try Again',
+    ctaText: (city) => `Want to know which university in ${city} fits your profile?\nChat with Wei for free — no commitment 😊`,
+  }
+};
+
+// ─── QUESTIONS ───────────────────────────────────────────────────
+const questions = [
+  {
+    th: "วันหยุดสุดสัปดาห์ในอุดมคติของคุณคืออะไร?",
+    en: "What's your ideal weekend?",
+    options: [
+      { th: "ไปพิพิธภัณฑ์ นิทรรศการ หรือสถานที่ประวัติศาสตร์", en: "Museums, exhibitions, or historic sites", scores: { beijing:3,shanghai:1,chengdu:0,guangzhou:0,shenzhen:0,kunming:1 } },
+      { th: "ช้อปปิ้ง ลอง concept cafe ใหม่ๆ หรือดูแฟชั่นโชว์", en: "Shopping, trendy cafes, or fashion events", scores: { beijing:0,shanghai:3,chengdu:1,guangzhou:1,shenzhen:1,kunming:0 } },
+      { th: "นั่งในร้านน้ำชา กินอาหารอร่อยๆ ไปเรื่อยๆ", en: "Tea houses, good food, just taking it slow", scores: { beijing:0,shanghai:0,chengdu:3,guangzhou:2,shenzhen:0,kunming:1 } },
+      { th: "ไป hiking เดินป่า หรือออกไปสัมผัสธรรมชาติ", en: "Hiking, trekking, or exploring nature", scores: { beijing:0,shanghai:0,chengdu:1,guangzhou:0,shenzhen:0,kunming:3 } },
+    ]
+  },
+  {
+    th: "คุณอยากเรียนสาขาอะไร?",
+    en: "What field do you want to study?",
+    options: [
+      { th: "รัฐศาสตร์ ความสัมพันธ์ระหว่างประเทศ กฎหมาย หรือประวัติศาสตร์", en: "Political science, international relations, law, or history", scores: { beijing:3,shanghai:1,chengdu:0,guangzhou:0,shenzhen:0,kunming:0 } },
+      { th: "บริหารธุรกิจ การเงิน แฟชั่น หรือการตลาดระดับโลก", en: "Business, finance, fashion, or global marketing", scores: { beijing:0,shanghai:3,chengdu:0,guangzhou:1,shenzhen:1,kunming:0 } },
+      { th: "วัฒนธรรมจีน ศิลปะ ภาษา หรือการท่องเที่ยว", en: "Chinese culture, arts, language, or tourism", scores: { beijing:1,shanghai:1,chengdu:3,guangzhou:1,shenzhen:0,kunming:2 } },
+      { th: "เทคโนโลยี วิศวกรรม หรือ startup", en: "Technology, engineering, or startups", scores: { beijing:1,shanghai:1,chengdu:0,guangzhou:1,shenzhen:3,kunming:0 } },
+    ]
+  },
+  {
+    th: "คุณรับมือกับอากาศแบบไหนได้ดีกว่า?",
+    en: "What kind of weather suits you best?",
+    options: [
+      { th: "หนาวจัด แต่ก็มีหิมะสวยๆ ในฤดูหนาว", en: "Freezing cold with beautiful snow in winter ❄️", scores: { beijing:3,shanghai:0,chengdu:0,guangzhou:0,shenzhen:0,kunming:0 } },
+      { th: "สี่ฤดูชัดเจน ร้อนก็ร้อน หนาวก็หนาว", en: "Four distinct seasons — hot summers, cold winters", scores: { beijing:1,shanghai:3,chengdu:1,guangzhou:0,shenzhen:0,kunming:0 } },
+      { th: "อากาศอบอุ่นตลอดปี ไม่ค่อยมีสภาวะสุดโต่ง", en: "Mild and pleasant all year round 🌸", scores: { beijing:0,shanghai:0,chengdu:0,guangzhou:1,shenzhen:1,kunming:3 } },
+      { th: "ร้อนชื้น แต่โอเคถ้ามีอาหารอร่อยชดเชย", en: "Hot and humid — but great food makes up for it 😄", scores: { beijing:0,shanghai:0,chengdu:2,guangzhou:3,shenzhen:2,kunming:0 } },
+    ]
+  },
+  {
+    th: "Vibe ของเมืองที่คุณอยากอยู่คือแบบไหน?",
+    en: "What vibe do you want from your city?",
+    options: [
+      { th: "ยิ่งใหญ่ มีพลัง รู้สึกว่าอยู่ใจกลางของทุกอย่าง", en: "Grand and powerful — the center of everything", scores: { beijing:3,shanghai:2,chengdu:0,guangzhou:0,shenzhen:0,kunming:0 } },
+      { th: "ทันสมัย international มีอะไรให้ทำตลอด 24 ชั่วโมง", en: "Modern, international, never sleeps", scores: { beijing:0,shanghai:3,chengdu:0,guangzhou:1,shenzhen:2,kunming:0 } },
+      { th: "ผ่อนคลาย คน friendly มีเวลาให้ตัวเอง", en: "Relaxed, friendly people, time for yourself", scores: { beijing:0,shanghai:0,chengdu:3,guangzhou:1,shenzhen:0,kunming:2 } },
+      { th: "สด energetic มีโอกาสเยอะ เปลี่ยนแปลงเร็ว", en: "Energetic, full of opportunity, fast-moving ⚡", scores: { beijing:0,shanghai:1,chengdu:0,guangzhou:2,shenzhen:3,kunming:0 } },
+    ]
+  },
+  {
+    th: "สิ่งที่ต้องมีในชีวิตประจำวันคืออะไร?",
+    en: "What's a must-have in your daily life?",
+    options: [
+      { th: "ห้องสมุด พิพิธภัณฑ์ สถาบันทางวิชาการ", en: "Libraries, museums, academic institutions 📚", scores: { beijing:3,shanghai:1,chengdu:1,guangzhou:0,shenzhen:0,kunming:1 } },
+      { th: "ร้านกาแฟ speakeasy bar ย่าน trendy", en: "Specialty coffee, bars, and trendy neighbourhoods", scores: { beijing:0,shanghai:3,chengdu:1,guangzhou:1,shenzhen:1,kunming:0 } },
+      { th: "ฮอตพอต สวนสาธารณะ panda 🐼", en: "Hotpot, parks, and pandas 🐼", scores: { beijing:0,shanghai:0,chengdu:3,guangzhou:0,shenzhen:0,kunming:0 } },
+      { th: "ดอกไม้บาน ทะเลสาบ วิวภูเขา อากาศบริสุทธิ์", en: "Blooming flowers, lakes, mountain views, fresh air 🌿", scores: { beijing:0,shanghai:0,chengdu:0,guangzhou:0,shenzhen:0,kunming:3 } },
+    ]
+  },
+  {
+    th: "เป้าหมายหลังจบการศึกษาของคุณคืออะไร?",
+    en: "What's your goal after graduation?",
+    options: [
+      { th: "ทำงานในภาครัฐ องค์กรระหว่างประเทศ หรือนักวิชาการ", en: "Government, international organisations, or academia", scores: { beijing:3,shanghai:0,chengdu:0,guangzhou:0,shenzhen:0,kunming:0 } },
+      { th: "ทำงานในบริษัทข้ามชาติ หรือวงการธุรกิจระดับโลก", en: "Multinational company or global business world", scores: { beijing:1,shanghai:3,chengdu:0,guangzhou:1,shenzhen:1,kunming:0 } },
+      { th: "กลับบ้านเกิดหรืออยู่จีน ทำสิ่งที่ชอบในแบบของตัวเอง", en: "Live life on my own terms — back home or stay in China", scores: { beijing:0,shanghai:0,chengdu:3,guangzhou:1,shenzhen:0,kunming:2 } },
+      { th: "เปิดธุรกิจตัวเอง หรือทำงานใน startup", en: "Start my own business or join a startup 🚀", scores: { beijing:0,shanghai:1,chengdu:0,guangzhou:2,shenzhen:3,kunming:0 } },
+    ]
+  },
+  {
+    th: "ถ้าให้เลือกกินอาหารจีนตอนนี้ คุณเลือกอะไร?",
+    en: "If you could eat Chinese food right now, what would you pick?",
+    options: [
+      { th: "ก๋วยเตี๋ยวซาโป จาฉาย เป็ดปักกิ่ง 🦆", en: "Peking duck and northern noodles 🦆", scores: { beijing:3,shanghai:0,chengdu:0,guangzhou:0,shenzhen:0,kunming:0 } },
+      { th: "เสี่ยวหลงเปา xiaolongbao dim sum แบบ fusion", en: "Xiaolongbao or fusion dim sum 🥟", scores: { beijing:0,shanghai:3,chengdu:0,guangzhou:1,shenzhen:0,kunming:0 } },
+      { th: "ฮอตพอต เสฉวน เผ็ดชาหลีบ 🌶️", en: "Sichuan hotpot — the spicier the better 🌶️", scores: { beijing:0,shanghai:0,chengdu:3,guangzhou:0,shenzhen:0,kunming:0 } },
+      { th: "ติ่มซำ กุ้งผัดกระเทียม ซีฟู้ด 🦐", en: "Cantonese dim sum and fresh seafood 🦐", scores: { beijing:0,shanghai:0,chengdu:0,guangzhou:3,shenzhen:1,kunming:0 } },
+    ]
+  },
+  {
+    th: "ตอนเรียน คุณชอบบรรยากาศแบบไหนมากกว่า?",
+    en: "What kind of study environment do you prefer?",
+    options: [
+      { th: "ห้องสมุดใหญ่ เงียบสงบ มีประวัติศาสตร์ยาวนาน", en: "A grand, quiet library steeped in history", scores: { beijing:3,shanghai:1,chengdu:1,guangzhou:0,shenzhen:0,kunming:1 } },
+      { th: "co-working space ทันสมัย มีคาเฟ่ในมหาวิทยาลัย", en: "Modern co-working spaces with campus cafes", scores: { beijing:0,shanghai:3,chengdu:1,guangzhou:1,shenzhen:2,kunming:0 } },
+      { th: "ลานกว้างกลางแจ้ง นั่งใต้ต้นไม้อ่านหนังสือ", en: "Reading under a tree in an open outdoor courtyard", scores: { beijing:0,shanghai:0,chengdu:2,guangzhou:1,shenzhen:0,kunming:3 } },
+      { th: "lab และ studio สุดทันสมัย เน้น innovation", en: "State-of-the-art labs and studios focused on innovation", scores: { beijing:1,shanghai:1,chengdu:0,guangzhou:1,shenzhen:3,kunming:0 } },
+    ]
+  },
+  {
+    th: "เพื่อนที่คุณอยากได้ในมหาวิทยาลัยเป็นแบบไหน?",
+    en: "What kind of friends do you hope to make at university?",
+    options: [
+      { th: "เพื่อนจากทั่วโลก หลากหลาย culture มาก", en: "International friends from all over the world", scores: { beijing:2,shanghai:3,chengdu:0,guangzhou:1,shenzhen:1,kunming:0 } },
+      { th: "เพื่อนคนจีนเยอะๆ อยากซึมซับภาษาและวัฒนธรรมจริงๆ", en: "Mostly Chinese friends — immerse in real culture and language", scores: { beijing:2,shanghai:0,chengdu:3,guangzhou:2,shenzhen:0,kunming:2 } },
+      { th: "เพื่อนสาย tech และ startup ที่มี passion เหมือนกัน", en: "Tech and startup people who share the same passion", scores: { beijing:0,shanghai:1,chengdu:0,guangzhou:1,shenzhen:3,kunming:0 } },
+      { th: "เพื่อนที่ชอบสำรวจเมือง ออกทริป และใช้ชีวิตด้วยกัน", en: "Friends who love exploring the city and going on trips", scores: { beijing:0,shanghai:1,chengdu:2,guangzhou:1,shenzhen:0,kunming:3 } },
+    ]
+  },
+  {
+    th: "ถ้าได้ไปจีนวันนี้เลย คุณอยากทำอะไรเป็นอย่างแรก?",
+    en: "If you could go to China today, what would you do first?",
+    options: [
+      { th: "ไปพระราชวังต้องห้ามและเดินกำแพงเมืองจีน 🏯", en: "Visit the Forbidden City and walk the Great Wall 🏯", scores: { beijing:3,shanghai:0,chengdu:0,guangzhou:0,shenzhen:0,kunming:0 } },
+      { th: "เดิน The Bund ถ่ายรูป skyline ยามค่ำคืน 🌃", en: "Stroll along The Bund and photograph the skyline at night 🌃", scores: { beijing:0,shanghai:3,chengdu:0,guangzhou:0,shenzhen:1,kunming:0 } },
+      { th: "ไปดูแพนด้าที่ Chengdu Research Base 🐼", en: "Visit the pandas at Chengdu Research Base 🐼", scores: { beijing:0,shanghai:0,chengdu:3,guangzhou:0,shenzhen:0,kunming:1 } },
+      { th: "นั่งรถไฟไปดูธรรมชาติ ทุ่งดอกไม้ หรือทะเลสาบ 🌿", en: "Take a train to see nature, flower fields, or a lake 🌿", scores: { beijing:0,shanghai:0,chengdu:1,guangzhou:0,shenzhen:0,kunming:3 } },
+    ]
+  }
+];
+
+// ─── RESULTS ─────────────────────────────────────────────────────
+const results = {
+  beijing: {
+    nameTh: "ปักกิ่ง", nameEn: "Beijing", nameCn: "北京", emoji: "🏯",
+    typeTh: "The Ambitious Scholar", typeEn: "The Ambitious Scholar",
+    descTh: "คุณมีความทะเยอทะยานทางวิชาการและต้องการอยู่ใจกลางของทุกสิ่ง ปักกิ่งคือศูนย์รวมของมหาวิทยาลัยชั้นนำ ประวัติศาสตร์ที่ลึกซึ้ง และโอกาสทางการเมือง-วิชาการที่หาที่ไหนไม่ได้",
+    descEn: "You're academically ambitious and want to be at the centre of it all. Beijing is home to China's top universities, rich history, and unmatched opportunities in politics and academia.",
+    tags: ["#วิชาการ / Academic", "#ประวัติศาสตร์ / History", "#PKU", "#THU"],
+    studyTh: "มหาวิทยาลัยที่น่าสนใจ: Peking University (北大), Tsinghua University (清华), Renmin University — ทุน CSC และทุนมหาวิทยาลัยมีให้เยอะมาก",
+    studyEn: "Universities to explore: Peking University (北大), Tsinghua University (清华), Renmin University — CSC and university scholarships widely available."
+  },
+  shanghai: {
+    nameTh: "เซี่ยงไฮ้", nameEn: "Shanghai", nameCn: "上海", emoji: "✨",
+    typeTh: "The Global Dreamer", typeEn: "The Global Dreamer",
+    descTh: "คุณรักความทันสมัย ชอบ international vibe และอยากอยู่ในเมืองที่ไม่เคยหลับ เซี่ยงไฮ้คือเมืองที่ผสมผสานตะวันตกและตะวันออกได้อย่างลงตัวที่สุดในจีน",
+    descEn: "You love modernity and international vibes, and want to live in a city that never sleeps. Shanghai blends East and West more seamlessly than anywhere else in China.",
+    tags: ["#ธุรกิจ / Business", "#แฟชั่น / Fashion", "#International", "#Cosmopolitan"],
+    studyTh: "มหาวิทยาลัยที่น่าสนใจ: Fudan University, Tongji University, Shanghai Jiao Tong University — โดดเด่นด้าน MBA และวิศวกรรม",
+    studyEn: "Universities to explore: Fudan University, Tongji University, Shanghai Jiao Tong University — outstanding for MBA and engineering."
+  },
+  chengdu: {
+    nameTh: "เฉิงตู", nameEn: "Chengdu", nameCn: "成都", emoji: "🐼",
+    typeTh: "The Chill Explorer", typeEn: "The Chill Explorer",
+    descTh: "คุณรักชีวิตที่ balance ไม่รีบร้อน แต่ก็ไม่ขาดความสนุก เฉิงตูขึ้นชื่อเรื่องคุณภาพชีวิตที่ดีที่สุดในจีน ค่าครองชีพต่ำ อาหารอร่อย และคนเป็นมิตรมาก",
+    descEn: "You value balance — never rushed, but always enjoying life. Chengdu is famous for having the best quality of life in China: low cost of living, incredible food, and incredibly friendly people.",
+    tags: ["#Chill", "#ฮอตพอต / Hotpot", "#วัฒนธรรม / Culture", "#ค่าครองชีพต่ำ / Affordable"],
+    studyTh: "มหาวิทยาลัยที่น่าสนใจ: Sichuan University, University of Electronic Science and Technology — เหมาะสำหรับสายวัฒนธรรมและ STEM",
+    studyEn: "Universities to explore: Sichuan University, University of Electronic Science and Technology — great for culture and STEM fields."
+  },
+  guangzhou: {
+    nameTh: "กว่างโจว", nameEn: "Guangzhou", nameCn: "广州", emoji: "🦐",
+    typeTh: "The Foodie Hustler", typeEn: "The Foodie Hustler",
+    descTh: "คุณ energetic รักอาหาร ชอบความหลากหลาย และต้องการเมืองที่คึกคักแต่ยังมีกลิ่นอายวัฒนธรรมดั้งเดิม กว่างโจวคือ hub การค้าที่ใหญ่ที่สุดในภาคใต้ของจีน",
+    descEn: "You're energetic, love food, and want a city that's vibrant yet culturally rooted. Guangzhou is the largest trade hub in southern China with deep Cantonese heritage.",
+    tags: ["#ติ่มซำ / Dim Sum", "#การค้า / Trade", "#Cantonese", "#ภาคใต้ / South"],
+    studyTh: "มหาวิทยาลัยที่น่าสนใจ: Sun Yat-sen University, South China University of Technology — โดดเด่นด้านการแพทย์และวิศวกรรม",
+    studyEn: "Universities to explore: Sun Yat-sen University, South China University of Technology — outstanding in medicine and engineering."
+  },
+  shenzhen: {
+    nameTh: "เซินเจิ้น", nameEn: "Shenzhen", nameCn: "深圳", emoji: "💻",
+    typeTh: "The Tech Innovator", typeEn: "The Tech Innovator",
+    descTh: "คุณคิดเร็ว ชอบ innovation และอยากอยู่ในเมืองที่กำลังเปลี่ยนโลก เซินเจิ้นคือ Silicon Valley ของจีน เมืองที่อายุเฉลี่ยของประชากรน้อยที่สุดในจีน และ startup scene คึกคักมาก",
+    descEn: "You think fast, love innovation, and want to be where the future is being built. Shenzhen is China's Silicon Valley — the youngest city in the country with a booming startup scene.",
+    tags: ["#Tech", "#Startup", "#Innovation", "#อนาคต / Future"],
+    studyTh: "มหาวิทยาลัยที่น่าสนใจ: Southern University of Science and Technology (SUSTech), Shenzhen University — ใหม่แต่ขึ้นเร็วมาก",
+    studyEn: "Universities to explore: Southern University of Science and Technology (SUSTech), Shenzhen University — young but rising fast."
+  },
+  kunming: {
+    nameTh: "คุนหมิง", nameEn: "Kunming", nameCn: "昆明", emoji: "🌸",
+    typeTh: "The Free Spirit", typeEn: "The Free Spirit",
+    descTh: "คุณรักธรรมชาติ ชอบความหลากหลายทางวัฒนธรรม และต้องการชีวิตที่เป็นของตัวเอง คุนหมิงได้ชื่อว่า 'เมืองแห่งฤดูใบไม้ผลิ' อากาศดีตลอดปี และเป็น gateway สู่เอเชียตะวันออกเฉียงใต้",
+    descEn: "You love nature, cultural diversity, and want life on your own terms. Kunming is known as the 'City of Eternal Spring' — mild weather all year and a gateway to Southeast Asia.",
+    tags: ["#ธรรมชาติ / Nature", "#วัฒนธรรม / Culture", "#อากาศดี / Great Weather", "#SEA Gateway"],
+    studyTh: "มหาวิทยาลัยที่น่าสนใจ: Yunnan University — มีชุมชนนักศึกษาไทยเยอะมาก เหมาะมากสำหรับคนไทย",
+    studyEn: "Universities to explore: Yunnan University — large Thai student community, ideal for Thai students."
+  }
+};
+
+// ─── STATE ───────────────────────────────────────────────────────
+let lang = 'th';
+let currentQ = 0;
+let scores = { beijing:0, shanghai:0, chengdu:0, guangzhou:0, shenzhen:0, kunming:0 };
+let lastResult = null;
+
+// ─── LANGUAGE ────────────────────────────────────────────────────
+function setLang(l) {
+  lang = l;
+  document.getElementById('btn-th').classList.toggle('active', l === 'th');
+  document.getElementById('btn-en').classList.toggle('active', l === 'en');
+
+  // update header
+  document.getElementById('header-title').innerHTML = t[lang].headerTitle;
+  document.getElementById('header-subtitle').textContent = t[lang].headerSubtitle;
+  document.getElementById('intro-text').textContent = t[lang].introText;
+  document.getElementById('start-btn').textContent = t[lang].startBtn;
+
+  // city chips
+  document.querySelectorAll('.city-label').forEach(el => {
+    el.textContent = el.dataset[lang];
+  });
+
+  // if quiz is running, re-render current question
+  if (!document.getElementById('quiz-screen').classList.contains('hidden')) {
+    renderQuestion();
+  }
+
+  // if result is showing, re-render result
+  if (!document.getElementById('result-screen').classList.contains('hidden') && lastResult) {
+    renderResult(lastResult);
+  }
+}
+
+// ─── QUIZ ────────────────────────────────────────────────────────
+function startQuiz() {
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('quiz-screen').classList.remove('hidden');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = questions[currentQ];
+  const total = questions.length;
+  const qLabel = lang === 'th'
+    ? `${t.th.questionLabel} ${currentQ + 1}`
+    : `${t.en.questionLabel} ${String(currentQ + 1).padStart(2,'0')}`;
+
+  document.getElementById('q-number').textContent = qLabel;
+  document.getElementById('q-text').textContent = q[lang];
+  document.getElementById('progress-text').textContent =
+    lang === 'th'
+      ? `ข้อ ${currentQ + 1} ${t.th.progressOf} ${total}`
+      : `${currentQ + 1} ${t.en.progressOf} ${total}`;
+  document.getElementById('progress-fill').style.width = `${(currentQ / total) * 100}%`;
+
+  const container = document.getElementById('options-container');
+  container.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.innerHTML = `<span class="option-letter">${letters[i]}</span><span>${opt[lang]}</span>`;
+    btn.onclick = () => selectOption(opt.scores, btn);
+    container.appendChild(btn);
+  });
+
+  const card = document.getElementById('question-card');
+  card.style.animation = 'none';
+  card.offsetHeight;
+  card.style.animation = 'fadeUp 0.4s ease both';
+}
+
+function selectOption(optScores, btn) {
+  document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+  btn.classList.add('selected');
+  setTimeout(() => {
+    Object.keys(optScores).forEach(city => { scores[city] += optScores[city]; });
+    currentQ++;
+    if (currentQ < questions.length) {
+      renderQuestion();
+    } else {
+      const winner = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+      lastResult = winner;
+      document.getElementById('quiz-screen').classList.add('hidden');
+      renderResult(winner);
+      document.getElementById('result-screen').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, 350);
+}
+
+function renderResult(winner) {
+  const r = results[winner];
+  const isEn = lang === 'en';
+
+  document.getElementById('result-label').textContent = t[lang].resultLabel;
+  document.getElementById('result-emoji').textContent = r.emoji;
+  document.getElementById('result-city').textContent = isEn ? r.nameEn : r.nameTh;
+  document.getElementById('result-city-cn').textContent = r.nameCn;
+  document.getElementById('result-type').textContent = isEn ? r.typeEn : r.typeTh;
+  document.getElementById('result-desc').textContent = isEn ? r.descEn : r.descTh;
+  document.getElementById('result-study').textContent = isEn ? r.studyEn : r.studyTh;
+
+  const cityName = isEn ? r.nameEn : r.nameTh;
+  document.getElementById('cta-text').textContent = t[lang].ctaText(cityName);
+  document.getElementById('cta-btn').textContent = t[lang].ctaBtn;
+  document.getElementById('retry-btn').textContent = t[lang].retryBtn;
+
+  document.getElementById('result-tags').innerHTML =
+    r.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
+}
+
+function resetQuiz() {
+  currentQ = 0;
+  lastResult = null;
+  scores = { beijing:0, shanghai:0, chengdu:0, guangzhou:0, shenzhen:0, kunming:0 };
+  document.getElementById('result-screen').classList.add('hidden');
+  document.getElementById('start-screen').classList.remove('hidden');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// init
+setLang('th');
+</script>
+</body>
+</html>
